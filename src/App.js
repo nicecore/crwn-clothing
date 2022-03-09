@@ -6,7 +6,7 @@ import ShopPage from './pages/shop/shop.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import Header from './components/header/header.component';
 
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 // Subscription: before we fetched data in the componentDidMount method, we fired a fetch to the backend in that method. We don't want to remount our app, we just want to always know when firebase has realized that the auth state has changed.
 
@@ -27,9 +27,23 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user });
-      console.log(user);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      // If app is getting a userAuth object from Firebase auth library.
+      if (userAuth) {
+        // Function in firebase utils returns that userRef object at the end. We use it to check if our database has updated at that reference with any new data.
+        const userRef = await createUserProfileDocument(userAuth);
+
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+          console.log(this.state);
+        });
+      }
+      this.setState({currentUser: userAuth})
     })
   }
 
