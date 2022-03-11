@@ -71,7 +71,7 @@ class SignIn extends React.Component{
                     <div className="buttons">
                         <CustomButton type="submit">Sign In</CustomButton>
                         {/* Making signInWithGoogle available on sign in page. isGoogleSignIn is a prop that gets passed to the button, on the button itself, through a conditional and string interpolation, the isGoogleSignIn class is rendered on the CustomButton */}
-                        <CustomButton onClick={signInWithGoogle} isGoogleSignIn>Sign In With Google</CustomButton>
+                        <CustomButton onClick={signInWithGoogle} isGoogleSignIn type="button">Sign In With Google</CustomButton>
                     </div>
 
 
